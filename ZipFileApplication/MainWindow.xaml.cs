@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Windows;
+using ZipFileApplication.Properties;
 using Forms = System.Windows.Forms;
 
 
@@ -16,8 +17,15 @@ namespace ZipFileApplication
         public MainWindow()
         {
             InitializeComponent();
-            var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            DirectoryPath.Text = Path.Combine(desktopPath, "ZipFileApplication");
+
+            if (string.IsNullOrWhiteSpace(Settings.Default.SourcePath) || !Directory.Exists(Settings.Default.SourcePath))
+            {
+                var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                Settings.Default.SourcePath = Path.Combine(desktopPath, "ZipFileApplication");
+                Settings.Default.Save();
+            }
+
+            DirectoryPath.Text = Settings.Default.SourcePath;
         }
 
         //Zipファイルを作成する一覧の処理
@@ -73,7 +81,8 @@ namespace ZipFileApplication
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 // 選択されたフォルダーパスをフォルダパスのテキストボックスに入力
-                DirectoryPath.Text = dlg.SelectedPath;
+                Settings.Default.SourcePath = DirectoryPath.Text = dlg.SelectedPath;
+                Settings.Default.Save();
             }
         }
     }
