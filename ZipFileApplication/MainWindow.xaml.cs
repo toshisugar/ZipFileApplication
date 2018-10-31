@@ -18,31 +18,45 @@ namespace ZipFileApplication
             InitializeComponent();
             var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             DirectoryPath.Text = Path.Combine(desktopPath, "ZipFileApplication");
+
         }
 
         //Zipファイルの作成を行う
         private void ZipButton_Click(object sender, RoutedEventArgs e)
         {
-            //パスワードを自動生成し、そのパスワードが設定されたZipファイルを作成する
-            string zipPass = System.Web.Security.Membership.GeneratePassword(8, 0);
+            //パスワードを自動生成する
+            string password = System.Web.Security.Membership.GeneratePassword(8, 0);
 
-            //圧縮するファイルが入っているフォルダのパス
+            //圧縮するファイルが入っているフォルダのパスを指定する
             string sourceDirectory = DirectoryPath.Text;
-            //サブディレクトリも圧縮するかどうか
+
+            //サブディレクトリも圧縮するかどうかを決める
             bool recurse = true;
 
-            //作成するZipファイルの名前
+            //圧縮ファイルを保存するフォルダを指定するダイアログボックスの生成
+            var SaveFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            var dlg = new Forms.FolderBrowserDialog();
+            // ボックスの説明文
+            dlg.Description = "保存先フォルダを指定してくれよな！";
+            // ダイアログボックスを表示
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                // 選択されたフォルダーパスを、保存先を格納する変数に代入
+                SaveFolder = dlg.SelectedPath;
+            }
+
+            //作成するZipファイル名とそれを置くフォルダを設定
             //ファイルが既に存在している場合は、上書きされる
-            string zipFileDirectoryAndName = Path.Combine(sourceDirectory, Path.ChangeExtension(SetZipFileName.Text, ".zip"));
+            string zipFileDirectoryAndName = Path.Combine(SaveFolder, Path.ChangeExtension(SetZipFileName.Text, ".zip"));
 
             FastZip fastZip = new FastZip();
             //trueなら空のフォルダもZipファイルに入れる。(デフォルトはfalse)
             fastZip.CreateEmptyDirectories = false;
-            //ZIP64を使うか。デフォルトはDynamicで、状況に応じてZIP64を使う。
-            //（大きなファイルはZIP64でしか圧縮できないが、対応していないアーカイバもある）
-            fastZip.UseZip64 = UseZip64.Dynamic;
+            //ZIP64を使うか。デフォルトはDynamicで、状況に応じてZIP64を使う（大きなファイルはZIP64でしか圧縮できないが、対応していないアーカイバもある）。
+            //fastZip.UseZip64 = UseZip64.Dynamic;
             //パスワードを設定
-            fastZip.Password = zipPass;
+            fastZip.Password = password;
+
             //ZIPファイルを作成
             fastZip.CreateZip(zipFileDirectoryAndName, sourceDirectory, recurse, null, null);
 
