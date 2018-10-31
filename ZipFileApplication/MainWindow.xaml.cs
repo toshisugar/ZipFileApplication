@@ -26,6 +26,8 @@ namespace ZipFileApplication
             //パスワードを自動生成する
             string password = System.Web.Security.Membership.GeneratePassword(8, 0);
 
+            ResultText.Text = ($"添付ファイル名：{SetZipFileName.Text}.zip\r\n\r\nパスワード：{password}");
+
             //圧縮するファイルが入っているフォルダのパスを指定する
             string sourceDirectory = DirectoryPath.Text;
 
@@ -61,6 +63,8 @@ namespace ZipFileApplication
             };
             //ZIPファイルを作成
             fastZip.CreateZip(zipFileDirectoryAndName, sourceDirectory, recurse, null, null);
+
+
 
         }
 
