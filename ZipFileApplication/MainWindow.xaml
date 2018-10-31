@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ZipFileApplication"
         mc:Ignorable="d"
-        Title="ZIP作成機" SizeToContent="WidthAndHeight">
+        Title="プレスナウ" SizeToContent="WidthAndHeight">
     <Grid Margin="9">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -27,13 +27,13 @@
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
         </Grid.Resources>
-        <Label Grid.Column="0" Grid.Row="0" Content="フォルダパス" />
+        <Label Grid.Column="0" Grid.Row="0" Content="圧縮するフォルダ" />
         <DockPanel Grid.Column="1" Grid.Row="0" Margin="3" VerticalAlignment="Center">
             <Button DockPanel.Dock="Right" Content="参照" Width="40" Click="BrowseButton_Click" />
             <TextBox Margin="0" VerticalAlignment="Stretch" Name="DirectoryPath" />
         </DockPanel>
                 
-        <Button Grid.ColumnSpan="2" Grid.Row="1" Content="↓　Zipファイル作成　↓" HorizontalAlignment="Center" Margin="3" Click="ZipButton_Click" />
+        <Button Grid.ColumnSpan="2" Grid.Row="1" Content="↓　圧縮する　↓" HorizontalAlignment="Center" Margin="3" Click="ZipButton_Click" />
         
         <Label Grid.Column="0" Grid.Row="2" Content="メールテキスト" />
         <TextBox Grid.Column="1" Grid.Row="2" Height="100" Name="ResultText" />
