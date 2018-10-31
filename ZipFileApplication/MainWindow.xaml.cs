@@ -39,7 +39,7 @@ namespace ZipFileApplication
             string password = System.Web.Security.Membership.GeneratePassword(8, 0);
 
             //ファイル名とパスワードのテキストメッセージ表示
-            ResultText.Text = ($"添付ファイル名：{SetZipFileName.Text}.zip\r\n\r\nパスワード：{password}");
+            ResultText.Text = ($"添付ファイル名：{Path.GetFileName(dlg.FileName)}.zip\r\n\r\nパスワード：{password}");
 
             //サブディレクトリも圧縮するかどうかの指定
             bool recurse = true;
