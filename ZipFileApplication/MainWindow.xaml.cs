@@ -1,9 +1,8 @@
-﻿using System;
+﻿using ICSharpCode.SharpZipLib.Zip;
+using System;
 using System.IO;
 using System.Windows;
-using System.Windows.Input;
 using Forms = System.Windows.Forms;
-using ICSharpCode.SharpZipLib.Zip;
 
 
 namespace ZipFileApplication
@@ -35,9 +34,11 @@ namespace ZipFileApplication
 
             //圧縮ファイルを保存するフォルダを指定するダイアログボックスの生成
             var SaveFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            var dlg = new Forms.FolderBrowserDialog();
-            // ボックスの説明文
-            dlg.Description = "保存先フォルダを指定してくれよな！";
+            var dlg = new Forms.FolderBrowserDialog
+            {
+                // ダイアログボックスの説明文
+                Description = "保存先フォルダを指定してくれよな！"
+            };
             // ダイアログボックスを表示
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -49,32 +50,28 @@ namespace ZipFileApplication
             //ファイルが既に存在している場合は、上書きされる
             string zipFileDirectoryAndName = Path.Combine(SaveFolder, Path.ChangeExtension(SetZipFileName.Text, ".zip"));
 
-            FastZip fastZip = new FastZip();
-            //trueなら空のフォルダもZipファイルに入れる。(デフォルトはfalse)
-            fastZip.CreateEmptyDirectories = false;
-            //ZIP64を使うか。デフォルトはDynamicで、状況に応じてZIP64を使う（大きなファイルはZIP64でしか圧縮できないが、対応していないアーカイバもある）。
-            //fastZip.UseZip64 = UseZip64.Dynamic;
-            //パスワードを設定
-            fastZip.Password = password;
-
+            FastZip fastZip = new FastZip
+            {
+                //trueなら空のフォルダもZipファイルに入れる。(デフォルトはfalse)
+                CreateEmptyDirectories = false,
+                //ZIP64を使うか。デフォルトはDynamicで、状況に応じてZIP64を使う（大きなファイルはZIP64でしか圧縮できないが、対応していないアーカイバもある）。
+                UseZip64 = UseZip64.Dynamic,
+                //パスワードを設定
+                Password = password
+            };
             //ZIPファイルを作成
             fastZip.CreateZip(zipFileDirectoryAndName, sourceDirectory, recurse, null, null);
 
         }
 
-        private void ZipPass(object sender, TextCompositionEventArgs e)
-        {
-
-        }
-
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            // フォルダー参照ダイアログのインスタンスを生成
-            var dlg = new Forms.FolderBrowserDialog();
-
-            // ボックスの説明文
-            dlg.Description = "Zipにしたいファイル・フォルダが入っているフォルダーを選択してくれよな！";
-
+            // 圧縮したいファイルが存在するフォルダを指定するためのダイアログボックスの生成
+            var dlg = new Forms.FolderBrowserDialog
+            {
+                // ダイアログボックスの説明文
+                Description = "Zipにしたいファイル・フォルダが入っているフォルダーを選択してくれよな！"
+            };
             // ダイアログボックスを表示
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
