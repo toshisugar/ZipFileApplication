@@ -17,31 +17,31 @@ namespace ZipFileApplication
             InitializeComponent();
             var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             DirectoryPath.Text = Path.Combine(desktopPath, "ZipFileApplication");
-
         }
 
-        //Zipファイルの作成を行う
+        //Zipファイルを作成する一覧の処理
         private void ZipButton_Click(object sender, RoutedEventArgs e)
         {
-            //パスワードを自動生成する
+            //パスワード自動生成
             string password = System.Web.Security.Membership.GeneratePassword(8, 0);
 
+            //ファイル名とパスワードのテキストメッセージ表示
             ResultText.Text = ($"添付ファイル名：{SetZipFileName.Text}.zip\r\n\r\nパスワード：{password}");
 
-            //圧縮するファイルが入っているフォルダのパスを指定する
+            //圧縮するファイルが入っているフォルダのパスをsouceDirectoryに格納
             string sourceDirectory = DirectoryPath.Text;
 
-            //サブディレクトリも圧縮するかどうかを決める
+            //サブディレクトリも圧縮するかどうかの指定
             bool recurse = true;
 
-            //圧縮ファイルを保存するフォルダを指定するダイアログボックスの生成
+            //圧縮したファイルを保存するフォルダを指定するダイアログボックスの生成
             var SaveFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             var dlg = new Forms.FolderBrowserDialog
             {
                 // ダイアログボックスの説明文
                 Description = "保存先フォルダを指定してくれよな！"
             };
-            // ダイアログボックスを表示
+            // ダイアログボックスのOKボタンが押されたら
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 // 選択されたフォルダーパスを、保存先を格納する変数に代入
@@ -63,9 +63,6 @@ namespace ZipFileApplication
             };
             //ZIPファイルを作成
             fastZip.CreateZip(zipFileDirectoryAndName, sourceDirectory, recurse, null, null);
-
-
-
         }
 
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
@@ -76,15 +73,13 @@ namespace ZipFileApplication
                 // ダイアログボックスの説明文
                 Description = "Zipにしたいファイル・フォルダが入っているフォルダーを選択してくれよな！"
             };
-            // ダイアログボックスを表示
+            // ダイアログボックスのOKボタンが押されたら
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 // 選択されたフォルダーパスをフォルダパスのテキストボックスに入力
                 DirectoryPath.Text = dlg.SelectedPath;
             }
         }
-
-
     }
 }
 
