@@ -87,7 +87,6 @@ namespace ZipFileApplication
             var fileContent = string.Empty;
             var filePath = string.Empty;
 
-            //using (Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog())
             Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
             {
                 openFileDialog.InitialDirectory = DirectoryPath.Text;
@@ -99,19 +98,22 @@ namespace ZipFileApplication
                 if (openFileDialog.ShowDialog() == true)
                 {
                     //Get the path of specified file
-                    filePath = openFileDialog.InitialDirectory;
+                    filePath = DirectoryPath.Text = openFileDialog.InitialDirectory;
+                    Settings.Default.SourcePath = DirectoryPath.Text = openFileDialog.FileName;
+                    Settings.Default.Save();
 
                     //Read the contents of the file into a stream
-                    /*var fileStream = openFileDialog.OpenFile();
+                    var fileStream = openFileDialog.OpenFile();
 
                     using (StreamReader reader = new StreamReader(fileStream))
                     {
                         fileContent = reader.ReadToEnd();
-                    }*/
+                    }
+
                 }
             }
 
-            Forms.MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
+            //Forms.MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
 
         }
     }
