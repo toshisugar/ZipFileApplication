@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Forms;
 using ZipFileApplication.Properties;
 using Forms = System.Windows.Forms;
+using System.IO.Compression;
 
 
 namespace ZipFileApplication
@@ -33,27 +34,25 @@ namespace ZipFileApplication
         //Zipファイルを作成する一覧の処理
         private void ZipButton_Click(object sender, RoutedEventArgs e)
         {
-            string sourceDirectory = DirectoryPath.Text;            //圧縮するファイルが入っているフォルダのパスをsouceDirectoryに格納
-            var dlg = new Microsoft.Win32.SaveFileDialog            //圧縮したファイルを保存するフォルダを指定するダイアログボックスの生成
+            string sourceDirectory = DirectoryPath.Text;                        //圧縮するファイルが入っているフォルダのパスをsouceDirectoryに格納
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog            //圧縮したファイルを保存するフォルダを指定するダイアログボックスの生成
             {
                 Title = "ZIPファイルの保存場所を指定してくれよな！",
-                Filter = "ZIPファイル|*.zip",
                 InitialDirectory = Path.GetDirectoryName(sourceDirectory),
             };
 
-            // 
-            if (dlg.ShowDialog() != true) return;
+            if (saveFileDialog.ShowDialog() != true) return;
 
             //パスワード自動生成
             string password = System.Web.Security.Membership.GeneratePassword(8, 0);
-            ResultText.Text = ($"添付ファイル名：{Path.GetFileName(dlg.FileName)}\r\n\r\nパスワード：{password}");                    //ファイル名とパスワードのテキストメッセージ表示
+            ResultText.Text = ($"添付ファイル名：{Path.GetFileName(saveFileDialog.FileName)}\r\n\r\nパスワード：{password}");                    //ファイル名とパスワードのテキストメッセージ表示
 
             //サブディレクトリも圧縮するかどうかの指定
             bool recurse = true;
 
             //作成するZipファイル名とそれを置くフォルダを設定
             //ファイルが既に存在している場合は、上書きされる
-            string zipFileDirectoryAndName = dlg.FileName;
+            string zipFileDirectoryAndName = saveFileDialog.FileName;
 
             FastZip fastZip = new FastZip
             {
@@ -70,20 +69,6 @@ namespace ZipFileApplication
 
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            //// 圧縮したいファイルが存在するフォルダを指定するためのダイアログボックスの生成
-            //var folderBrowserDialog = new Forms.FolderBrowserDialog
-            //{
-            //    // ダイアログボックスの説明文
-            //    Description = "Zipにしたいファイル・フォルダが入っているフォルダーを選択してくれよな！"
-            //};
-            //// ダイアログボックスのOKボタンが押されたら
-            //if (folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            //{
-            //    // 選択されたフォルダーパスをフォルダパスのテキストボックスに入力
-            //    Settings.Default.SourcePath = DirectoryPath.Text = folderBrowserDialog.SelectedPath;
-            //    Settings.Default.Save();
-            //}
-
             var fileContent = string.Empty;
             var filePath = string.Empty;
 
@@ -113,6 +98,7 @@ namespace ZipFileApplication
                 }
             }
 
+            //選択した際のメッセージボックスの内容
             //Forms.MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
 
         }
